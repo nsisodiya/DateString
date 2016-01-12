@@ -1,0 +1,23 @@
+{
+  "name": "datestring",
+  "version": "1.0.0",
+  "description": "Simple YYYY-MM-DD Library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nsisodiya/DateString.git"
+  },
+  "keywords": [
+    "date",
+    "javascript"
+  ],
+  "author": "Narendra Sisodiya <narendra@narendrasisodiya.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nsisodiya/DateString/issues"
+  },
+  "homepage": "https://github.com/nsisodiya/DateString#readme"
+}
