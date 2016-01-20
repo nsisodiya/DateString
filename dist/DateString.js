@@ -99,66 +99,104 @@
 			 */
 
 			var monthList = [{}, {
-				fullName: 'January',
-				shortName: 'Jan'
+				full: 'January',
+				short: 'Jan'
 			}, {
-				fullName: 'February',
-				shortName: 'Feb'
+				full: 'February',
+				short: 'Feb'
 			}, {
-				fullName: 'March',
-				shortName: 'Mar'
+				full: 'March',
+				short: 'Mar'
 			}, {
-				fullName: 'April',
-				shortName: 'Apr'
+				full: 'April',
+				short: 'Apr'
 			}, {
-				fullName: 'May',
-				shortName: 'May'
+				full: 'May',
+				short: 'May'
 			}, {
-				fullName: 'June',
-				shortName: 'Jun'
+				full: 'June',
+				short: 'Jun'
 			}, {
-				fullName: 'July',
-				shortName: 'Jul'
+				full: 'July',
+				short: 'Jul'
 			}, {
-				fullName: 'August',
-				shortName: 'Aug'
+				full: 'August',
+				short: 'Aug'
 			}, {
-				fullName: 'September',
-				shortName: 'Sep'
+				full: 'September',
+				short: 'Sep'
 			}, {
-				fullName: 'October',
-				shortName: 'Oct'
+				full: 'October',
+				short: 'Oct'
 			}, {
-				fullName: 'November',
-				shortName: 'Nov'
+				full: 'November',
+				short: 'Nov'
 			}, {
-				fullName: 'December',
-				shortName: 'Dec'
+				full: 'December',
+				short: 'Dec'
 			}];
+
+			var dayList = [{
+				full: 'Sunday',
+				mid: 'Sun',
+				short: 'Su'
+			}, {
+				full: 'Monday',
+				mid: 'Mon',
+				short: 'Mo'
+			}, {
+				full: 'Tuesday',
+				mid: 'Tue',
+				short: 'Tu'
+			}, {
+				full: 'Wednesday',
+				mid: 'Wed',
+				short: 'We'
+			}, {
+				full: 'Thursday',
+				mid: 'Thu',
+				short: 'Th'
+			}, {
+				full: 'Friday',
+				mid: 'Fri',
+				short: 'Fr'
+			}, {
+				full: 'Saturday',
+				mid: 'Sat',
+				short: 'Sa'
+			}];
+
+			var validMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+			var validDates = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16',
+				'17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
 
 			var DateString = function () {
 				function DateString(str) {
 					_classCallCheck(this, DateString);
 
-					var p = str.split('-');
-					Object.defineProperty(this, 'y', {
-						value: p[0],
-						enumerable: false,
-						configurable: false,
-						writable: true
-					});
-					Object.defineProperty(this, 'm', {
-						value: p[1],
-						enumerable: false,
-						configurable: false,
-						writable: true
-					});
-					Object.defineProperty(this, 'd', {
-						value: p[2],
-						enumerable: false,
-						configurable: false,
-						writable: true
-					});
+					if (DateString.validate(str)) {
+						var p = str.split('-');
+						Object.defineProperty(this, 'y', {
+							value: p[0],
+							enumerable: false,
+							configurable: false,
+							writable: true
+						});
+						Object.defineProperty(this, 'm', {
+							value: p[1],
+							enumerable: false,
+							configurable: false,
+							writable: true
+						});
+						Object.defineProperty(this, 'd', {
+							value: p[2],
+							enumerable: false,
+							configurable: false,
+							writable: true
+						});
+					} else {
+						console.error("Invalid DateString");
+					}
 		}
 
 				_createClass(DateString, [{
@@ -211,12 +249,122 @@
 					value: function getDateStr() {
 						return this.d;
 					}
+				}, {
+					key: 'getDayFullName',
+					value: function getDayFullName() {
+						return dayList[this.getDayIndex()].full;
+					}
+				}, {
+					key: 'getDayShortName',
+					value: function getDayShortName() {
+						return dayList[this.getDayIndex()].short;
+					}
+				}, {
+					key: 'getDayIndex',
+					value: function getDayIndex() {
+						return new Date(this.getYear(), this.getMonth() - 1, this.getDate()).getDay();
+					}
+				}, {
+					key: 'getMonthName',
+					value: function getMonthName() {
+						return monthList[this.getMonth()].full;
+					}
+				}, {
+					key: 'getMonthShortName',
+					value: function getMonthShortName() {
+						return monthList[this.getMonth()].short;
+					}
+				}, {
+					key: 'clone',
+					value: function clone() {
+						return new DateString(this.val());
+					}
+				}, {
+					key: 'add',
+					value: function add(n) {
+						//if (not int){
+						//	throw 'Error, argument provided on add() function is not a integer.';
+						//}
+
+						var d = new Date(this.getYear(), this.getMonth() - 1, this.getDate());
+						var startTimeStamp = d.getTime();
+						var newTimeStamp = startTimeStamp + n * 24 * 3600000;
+						var p = new Date(newTimeStamp);
+						this.y = p.getFullYear() + "";
+						this.m = validMonths[p.getMonth()];
+						var c = validDates.slice(0);
+						c.unshift('');
+						this.d = c[p.getDate()];
+						return this;
+					}
+				}, {
+					key: 'takeItToFirstDayOfCurrentMonth',
+					value: function takeItToFirstDayOfCurrentMonth() {
+						this.d = '01';
+						return this;
+					}
+				}, {
+					key: 'takeItToFirstDayOfCurrentYear',
+					value: function takeItToFirstDayOfCurrentYear() {
+						this.m = '01';
+						this.d = '01';
+						return this;
+					}
+				}, {
+					key: 'takeItToLastDayOfCurrentYear',
+					value: function takeItToLastDayOfCurrentYear() {
+						this.m = '12';
+						this.d = '31';
+						return this;
+					}
+				}, {
+					key: 'takeItToFirstDayOfNextMonth',
+					value: function takeItToFirstDayOfNextMonth() {
+						this.d = '01';
+						if (this.getMonth() + 1 === 13) {
+							this.y = this.getYear() + 1;
+							this.m = '01';
+						} else {
+							this.m =
+									[undefined, '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'][this.getMonth() +
+									1];
+						}
+						return this;
+					}
+				}, {
+					key: 'takeItToFirstDayOfPrevMonth',
+					value: function takeItToFirstDayOfPrevMonth() {
+						this.d = '01';
+						if (this.getMonth() - 1 === 0) {
+							this.y = this.getYear() - 1;
+							this.m = '12';
+						} else {
+							this.m =
+									[undefined, '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'][this.getMonth() -
+									1];
+						}
+						return this;
+					}
 				}]);
 
 				return DateString;
 			}();
 
-			DateString.validateStr = function () {
+			DateString.validate = function (str) {
+				if (typeof str !== 'string') {
+					console.error('Error: DateString must be string. Ex - 2015-09-20');
+					return false;
+				} else if (str.split('-').length !== 3) {
+					return false;
+					console.error('Error: DateString must have two 2 dashs. Ex - 2015-09-20');
+				} else if (validMonths.indexOf(str.split('-')[1]) === -1) {
+					return false;
+					console.error('Error: DateString month is not valid. use ' + validMonths);
+				} else if (validDates.indexOf(str.split('-')[2]) === -1) {
+					return false;
+					console.error('Error: DateString date is not valid. use ' + validDates);
+		}
+				return true;
 			};
 
 			module.exports = DateString;
